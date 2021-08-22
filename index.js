@@ -1,6 +1,9 @@
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
-const { token } = require('./config.json');
+
+require('dotenv').config();
+
+const token = process.env.TOKEN;
 
 const client = new Client(
     {intents: [
