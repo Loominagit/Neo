@@ -1,16 +1,19 @@
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
+const { print } = require('./custom_log.js');
 
 require('dotenv').config();
 
 const token = process.env.TOKEN;
 
+print('Creating new Client...');
 const client = new Client(
     {intents: [
         Intents.FLAGS.GUILDS
     ]}
 );
 
+print('Preparing commands...')
 client.commands = new Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -19,8 +22,10 @@ for (const file of commandFiles) {
     client.commands.set(command.data.name, command);
 }
 
+print('Binding events...');
 client.once('ready', () => {
-    console.log('Ready!');
+    client.user.setActivity('Loominatrx making me!', { type: 'WATCHING' });
+    print(`Logged in as ${client.user.tag}`);
 });
 
 client.on('interactionCreate', async interaction => {
@@ -39,4 +44,5 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
+print('Logging in...');
 client.login(token);
