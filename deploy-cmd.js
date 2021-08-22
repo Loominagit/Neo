@@ -1,7 +1,11 @@
+require('dotenv').config();
+
 const fs = require('fs');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
-const { clientId } = require('./config.json');
+
+const clientId = process.env.CLIENT_ID;
+const token = process.env.TOKEN;
 
 const commands = [];
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
@@ -16,7 +20,7 @@ const rest = new REST({ version: '9' }).setToken(token);
 (async () => {
 	try {
 		await rest.put(
-			Routes.applicationCommand(clientId),
+			Routes.applicationCommands(clientId),
 			{ body: commands },
 		);
 
