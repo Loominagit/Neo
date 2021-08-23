@@ -1,3 +1,5 @@
+process.title = 'Neo';
+
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
 const { print } = require('./custom_log.js');
@@ -8,9 +10,11 @@ const token = process.env.TOKEN;
 
 print('Creating new Client...');
 const client = new Client(
-    {intents: [
-        Intents.FLAGS.GUILDS
-    ]}
+    {
+        intents: [
+            Intents.FLAGS.GUILDS
+        ]
+    }
 );
 
 print('Preparing commands...')
@@ -32,15 +36,15 @@ client.on('interactionCreate', async interaction => {
     if (!interaction.isCommand()) return;
 
     const command = client.commands.get(interaction.commandName);
+    if (!interaction.inGuild()) return interaction.reply({ content: 'My commands are available on servers, lol. Sorry.', ephemeral: true });
 
     if (!command) return;
 
     try {
         await command.execute(interaction);
-    }
-    catch (error) {
+    } catch (error) {
         console.error(error);
-        return interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+        return interaction.reply({ content: 'Oops, there was an error while executing this command! If this error still presists, make an [Issue](<https://github.com/Loominagit/Neo/issues>) on my GitHub page.', ephemeral: true });
     }
 });
 
