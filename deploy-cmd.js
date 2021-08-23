@@ -30,10 +30,6 @@ const rest = new REST({ version: '9' }).setToken(token);
 		);
 
 		print('Successfully registered slash (/) commands!');
-		print('----------');
-		print('You can wait for a while for slash commands to be registered on Discord');
-		print('that sometimes took longer than you may expect, or maybe you want to continue');
-		print('adding some commands to the bot, idk.');
 	} catch (err) {
 		error(err);
 	}
