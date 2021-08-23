@@ -9,11 +9,10 @@ module.exports = {
 
 	async execute(interaction) {
 		const client = interaction.client;
-        return await interaction.reply({ content: 'Pinging...', fetchReply: true }).then(reply => {
-            const embed = new MessageEmbed()
-                .setTitle('Pong!')
-                .setDescription(`**Websocket Latency**: ${client.ws.ping}ms`);
-            await reply.edit({ embeds: [embed], content: 'Here\'s the result.' });
-        });
+        const msg = await interaction.deferReply({ fetchReply: true });
+        const embed = new MessageEmbed()
+            .setTitle('Pong!')
+            .setDescription(`Latency: ${msg.createdTimestamp - interaction.createdTimestamp}ms\nAPI Latency: ${client.ws.ping}ms`)
+        await interaction.editReply({ embeds: [embed] })
 	},
 };
