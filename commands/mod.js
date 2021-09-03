@@ -102,14 +102,20 @@ const subCommands = {
             return interaction.reply({ embeds: [embed] });
         }
 
-        if (guild.cache.get(user.id)) {
+        if (guild.members.cache.get(user.id)) {
             embed
                 .setDescription(`Why would you unban existing user on this server lol?`)
                 .setColor(colorCodeError);
             return interaction.reply({ embeds: [embed], ephermal: true });
         }
 
-        guild.unban(user, reason || '')
+        guild.members.unban(user, reason || '')
+            .then(user => {
+                embed
+                    .setDescription(`Unbanned @${user.tag}`)
+                    .setColor(colorCodeSuccess);
+                return interaction.reply({ embeds: [embed], ephermal: true });
+            });
     }
 }
 
