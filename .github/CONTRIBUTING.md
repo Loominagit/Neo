@@ -10,4 +10,6 @@ To get ready to work on the code, please do the following:
 1. Fork & clone the repo, and make sure you're on the **main** branch.
 2. Run `npm ci`
 3. Code it all you want!
-4. [Submit a pull request](https://github.com/Loominagit/Neo/compare)
+4. Test the bot!
+   *NOTE: Make sure there is no any error while executing commands.*
+5. [Submit a pull request](https://github.com/Loominagit/Neo/compare) and explain why you submitted a pull request. (e.g. fixing bug, adding features, etc...).
