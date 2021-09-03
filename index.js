@@ -2,6 +2,7 @@ process.title = 'Neo';
 require('./modules/custom_log.js');
 
 const fs = require('fs');
+const https = require('https');
 const { Client, Collection, Intents } = require('discord.js');
 
 require('dotenv').config();
@@ -28,6 +29,9 @@ console.log('Binding events...');
 client.once('ready', () => {
     client.user.setActivity('Loominatrx making me!', { type: 'WATCHING' });
     console.log(`Logged in as ${client.user.tag}`);
+    setInterval(1e3, () => {
+        https.request({ hostname: 'https://loominatrxsussybakaamogus.herokuapp.com' })
+    })
 });
 
 client.on('interactionCreate', async interaction => {
