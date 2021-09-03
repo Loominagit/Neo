@@ -1,5 +1,5 @@
 process.title = 'Neo';
-require('./custom_log.js');
+require('./modules/custom_log.js');
 
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');

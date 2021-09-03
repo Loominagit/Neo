@@ -1,5 +1,5 @@
 require('dotenv').config();
-require('./custom_log.js');
+require('./modules/custom_log.js');
 
 const fs = require('fs');
 const { REST } = require('@discordjs/rest');
