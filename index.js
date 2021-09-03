@@ -1,14 +1,14 @@
 process.title = 'Neo';
+require('./custom_log.js');
 
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
-const { print } = require('./custom_log.js');
 
 require('dotenv').config();
 
 const token = process.env.TOKEN;
 
-print('Creating new Client...');
+console.log('Creating new Client...');
 const client = new Client(
     {
         intents: [
@@ -17,7 +17,7 @@ const client = new Client(
     }
 );
 
-print('Preparing commands...')
+console.log('Preparing commands...')
 client.commands = new Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -26,10 +26,10 @@ for (const file of commandFiles) {
     client.commands.set(command.data.name, command);
 }
 
-print('Binding events...');
+console.log('Binding events...');
 client.once('ready', () => {
     client.user.setActivity('Loominatrx making me!', { type: 'WATCHING' });
-    print(`Logged in as ${client.user.tag}`);
+    console.log(`Logged in as ${client.user.tag}`);
 });
 
 client.on('interactionCreate', async interaction => {
@@ -42,11 +42,11 @@ client.on('interactionCreate', async interaction => {
 
     try {
         await command.execute(interaction);
-    } catch (error) {
-        console.error(error);
+    } catch (err) {
+        console.error(err);
         return interaction.reply({ content: 'Oops, there was an error while executing this command! If this error still presists, make an [Issue](<https://github.com/Loominagit/Neo/issues>) on my GitHub page.', ephemeral: true });
     }
 });
 
-print('Logging in...');
+console.log('Logging in...');
 client.login(token);
