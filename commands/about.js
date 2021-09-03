@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed, Permissions } = require('discord.js');
-const { name, description, colorCodeInfo } = require('../config.json');
+const { MessageEmbed } = require('discord.js');
+const { description, colorCodeInfo } = require('../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -8,7 +8,7 @@ module.exports = {
         .setDescription('About me!'),
     async execute(interaction) {
         const embed = new MessageEmbed()
-            //.setTitle(name)
+            // .setTitle(name)
             .setDescription(description)
             .setTimestamp(Date.now())
             .addField('Repository', 'https://github.com/Loominagit/Neo', true)
@@ -16,5 +16,5 @@ module.exports = {
             .setAuthor('Project Neo', '', 'https://github.com/Loominagit/Neo')
             .setColor(colorCodeInfo);
         return interaction.reply({ embeds: [embed] });
-    }
+    },
 };

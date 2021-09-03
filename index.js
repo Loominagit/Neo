@@ -11,13 +11,11 @@ const token = process.env.TOKEN;
 console.log('Creating new Client...');
 const client = new Client(
     {
-        intents: [
-            Intents.FLAGS.GUILDS
-        ]
-    }
+        intents: [Intents.FLAGS.GUILDS],
+    },
 );
 
-console.log('Preparing commands...')
+console.log('Preparing commands...');
 client.commands = new Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 

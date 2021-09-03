@@ -34,11 +34,11 @@ const custom = {
 
 write(`--${EOL}`);
 
-process.on('uncaughtException', (err, origin) => {
+process.on('uncaughtException', (err) => {
     custom.error(err);
 });
 
-process.on('uncaughtRejection', (err, origin) => {
+process.on('uncaughtRejection', (err) => {
     custom.error(err);
 });
 

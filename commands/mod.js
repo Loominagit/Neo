@@ -7,7 +7,7 @@ const getUser = async (client, id) => {
 };
 
 const checkPerms = (member, perms) => {
-    return member.permissions.has(perms) || member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)
+    return member.permissions.has(perms) || member.permissions.has(Permissions.FLAGS.ADMINISTRATOR);
 };
 
 const subCommands = {
@@ -22,7 +22,7 @@ const subCommands = {
         // check their permission if they had ability to kick user
         if (!checkPerms(author, Permissions.FLAGS.KICK_MEMBERS)) {
             embed
-                .setDescription(`I'm sorry, but you lack of permissions to do that.`)
+                .setDescription('I\'m sorry, but you lack of permissions to do that.')
                 .setColor(colorCodeError);
             return interaction.reply({ embeds: [embed] });
         }
@@ -33,31 +33,31 @@ const subCommands = {
                 .setColor(colorCodeError);
             return interaction.reply({ embeds: [embed] });
         }
-        
-        member.kick(reason).then(member => {
+
+        member.kick(reason).then(() => {
             embed
                 .setDescription(`Kicked @${member.user.tag}.`)
                 .setColor(colorCodeSuccess);
             interaction.reply({ embeds: [embed] });
-        })
+        });
     },
     'ban': (interaction) => {
         const options = interaction.options;
         const author = interaction.member;
         const embed = new MessageEmbed();
-        
+
         const member = options.getMember('user', true);
         const reason = options.getString('reason');
 
         const banOption = {
             days: 7,
-            reason: reason || ''
+            reason: reason || '',
         };
 
         // check their permission if they had ability to kick user
         if (!checkPerms(author, Permissions.FLAGS.BAN_MEMBERS)) {
             embed
-                .setDescription(`I'm sorry, but you lack of permissions to do that.`)
+                .setDescription('I\'m sorry, but you lack of permissions to do that.')
                 .setColor(colorCodeError);
             return interaction.reply({ embeds: [embed] });
         }
@@ -68,20 +68,19 @@ const subCommands = {
                 .setColor(colorCodeError);
             return interaction.reply({ embeds: [embed] });
         }
-        
-        member.ban(banOption).then(member => {
+        member.ban(banOption).then(() => {
             embed
                 .setDescription(`Ban @${member.user.tag}.`)
                 .setColor(colorCodeSuccess);
             interaction.reply({ embeds: [embed] });
-        })
+        });
     },
     'unban': async (interaction) => {
         const options = interaction.options;
         const author = interaction.member;
         const embed = new MessageEmbed();
         const guild = interaction.guild;
-        
+
         const id = options.getString('user', true);
         const reason = options.getString('reason');
 
@@ -89,7 +88,7 @@ const subCommands = {
 
         if (!user) {
             embed
-                .setDescription(`User not found, maybe you input wrong user ID /shrug`)
+                .setDescription('User not found, maybe you input wrong user ID /shrug')
                 .setColor(colorCodeError);
             return interaction.reply({ embeds: [embed], ephermal: true });
         }
@@ -97,27 +96,26 @@ const subCommands = {
         // check their permission if they had ability to kick user
         if (!checkPerms(author, Permissions.FLAGS.BAN_MEMBERS)) {
             embed
-                .setDescription(`I'm sorry, but you lack of permissions to do that.`)
+                .setDescription('I\'m sorry, but you lack of permissions to do that.')
                 .setColor(colorCodeError);
             return interaction.reply({ embeds: [embed] });
         }
 
-        if (guild.members.cache.get(user.id)) {
-            embed
-                .setDescription(`Why would you unban existing user on this server lol?`)
-                .setColor(colorCodeError);
-            return interaction.reply({ embeds: [embed], ephermal: true });
-        }
-
         guild.members.unban(user, reason || '')
-            .then(user => {
+            .then(() => {
                 embed
                     .setDescription(`Unbanned @${user.tag}`)
                     .setColor(colorCodeSuccess);
                 return interaction.reply({ embeds: [embed], ephermal: true });
+            })
+            .catch(() => {
+                embed
+                    .setDescription(`@${user.tag} is not banned, no need to do that man.`)
+                    .setColor(colorCodeError);
+                return interaction.reply({ embeds: [embed], ephermal: true });
             });
-    }
-}
+    },
+};
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -125,107 +123,90 @@ module.exports = {
         .setDescription('Executes moderation commands.')
 
         // mute
-        .addSubcommand( subcommand => 
+        .addSubcommand(subcommand =>
             subcommand
                 .setName('mute')
                 .setDescription('Temporarily mute user at certain amount of time.')
-                .addUserOption(option => 
+                .addUserOption(option =>
                     option
                         .setName('user')
                         .setDescription('The user you want to be muted.')
-                        .setRequired(true)
-                )
-                .addStringOption(option => 
+                        .setRequired(true))
+                .addStringOption(option =>
                     option
                         .setName('duration')
                         .setDescription('How long the mute will be? (e.g. 1d2h3m4s). The default duration is 30m.')
-                        .setRequired(false)
-                )
+                        .setRequired(false))
                 .addStringOption(option =>
                     option
                         .setName('reason')
                         .setDescription('The reason why this user has to be muted. (e.g. You are doing something sussy.)')
-                        .setRequired(false)
-                )
-        )
-        .addSubcommand( subcommand => 
+                        .setRequired(false)))
+        .addSubcommand(subcommand =>
             subcommand
                 .setName('unmute')
                 .setDescription('Unmute the user, a.k.a. give them mercy.')
-                .addUserOption(option => 
+                .addUserOption(option =>
                     option
                         .setName('user')
                         .setDescription('The user you want to be unmuted.')
-                        .setRequired(true)
-                )
+                        .setRequired(true))
                 .addStringOption(option =>
                     option
                         .setName('reason')
                         .setDescription('The reason why this user has to be unmuted. (e.g. Appeal accepted.)')
-                        .setRequired(false)
-                )
-        )
-        
+                        .setRequired(false)))
+
         // kick
-        .addSubcommand( subcommand => 
+        .addSubcommand(subcommand =>
             subcommand
                 .setName('kick')
                 .setDescription('Kick user from this server.')
-                .addUserOption(option => 
+                .addUserOption(option =>
                     option
                         .setName('user')
                         .setDescription('The user you want to be kicked.')
-                        .setRequired(true)
-                )
+                        .setRequired(true))
                 .addStringOption(option =>
                     option
                         .setName('reason')
                         .setDescription('The reason why this user has to be kicked. (e.g. Get outta here!)')
-                        .setRequired(false)
-                )
-        )
+                        .setRequired(false)))
 
         // ban
-        .addSubcommand( subcommand => 
+        .addSubcommand(subcommand =>
             subcommand
                 .setName('ban')
                 .setDescription('Temporarily ban user at certain amount of time from this server.')
-                .addUserOption(option => 
+                .addUserOption(option =>
                     option
                         .setName('user')
                         .setDescription('The user you want to be banned.')
-                        .setRequired(true)
-                )
+                        .setRequired(true))
                 .addStringOption(option =>
                     option
                         .setName('reason')
                         .setDescription('The reason why this user has to be banned. (e.g. You are doing something sussy.)')
-                        .setRequired(false)
-                )
-                .addStringOption(option => 
+                        .setRequired(false))
+                .addStringOption(option =>
                     option
                         .setName('duration')
                         .setDescription('How long the ban will be? (e.g. 1d2h3m4s). Leave this empty if you want a permanent ban.')
-                        .setRequired(false)
-                )
-        )
-        .addSubcommand( subcommand => 
+                        .setRequired(false)))
+        .addSubcommand(subcommand =>
             subcommand
                 .setName('unban')
                 .setDescription('Unban the user.')
-                .addStringOption(option => 
+                .addStringOption(option =>
                     option
                         .setName('user')
                         .setDescription('The user you want to be unbanned (must be user ID, because the user isn\'t here, lol).')
-                        .setRequired(true)
-                )
+                        .setRequired(true))
                 .addStringOption(option =>
                     option
                         .setName('reason')
                         .setDescription('The reason why this user has to be unbanned. (e.g. Appeal accepted.)')
-                        .setRequired(false)
-                )
-        ),
+                        .setRequired(false))),
     async execute(interaction) {
         const options = interaction.options;
         const subCommand = options.getSubcommand();
@@ -238,9 +219,9 @@ module.exports = {
                     .setColor(colorCodeError);
                 return interaction.reply({ embeds: [embed], ephermal: true });
             }
-        } catch(err) {
+        } catch (err) {
             console.error(err);
             return interaction.reply({ content: 'Oops, there was an error while executing this command! If this error still presists, make an [Issue](<https://github.com/Loominagit/Neo/issues>) on my GitHub page.', ephemeral: true });
         }
-    }
+    },
 };
