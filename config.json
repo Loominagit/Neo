@@ -1,4 +1,9 @@
 {
     "name": "Neo",
-    "description": "Neo is an feature-rich, versatile, and open-source Discord bot that is written in JavaScript using `discord.js`"
+    "description": "Neo is an feature-rich, versatile, and open-source Discord bot that is written in JavaScript using `discord.js`",
+
+    "colorCodeSuccess": "#3CC83C",
+    "colorCodeError": "#C83C3C",
+    "colorCodeInfo": "#0096DB",
+    "colorCodeWarn": "#FFD000"
 }
