@@ -1,5 +1,5 @@
 # Neo
-an open source discord bot written in JavaScript.
+an open source discord bot written in JavaScript using [Discord.js v13](https://discord.js.org) library.
 
 ## Starting the bot
 - The first step, create a file named `.env` in the root folder.
@@ -16,4 +16,4 @@ an open source discord bot written in JavaScript.
 ## Contributing
 Before creating an issue, please ensure that it hasn't already been reported / suggested.
 
-See the [contribution guide](https://github.com/Loominagit/Neo/blob/main/.github/CONTRIBUTING.md) if you'd like to submit a PR instead.
+See the [contribution guide](https://github.com/Loominagit/Neo/blob/main/.github/CONTRIBUTING.md) if you'd like to submit a PR.
