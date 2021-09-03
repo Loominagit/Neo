@@ -1,23 +1,49 @@
 const fs = require('fs');
 const write = (data) => fs.appendFileSync('./debug.log', data);
-
+const old_log = console.log;
+const { EOL } = require('os');
 const getCurrentTime = () => {
     return new Date().toLocaleString().replace(/\./gi, ':');
 };
 
-write('--\n');
+const checkError = (err) => {
+    return err && err.stack && err.message;
+};
 
-module.exports = {
-    warn: (...message) => {
-        console.log(`\x1b[0m\x1b[36m${getCurrentTime()}\x1b[34m -- \x1b[1;33m[WARN]\x1b[0m ${message}`);
-        write(`${getCurrentTime()} -- [WARN] ${message}\n`);
+const custom = {
+    warn: (message) => {
+        const time = getCurrentTime();
+        old_log(`\x1b[0m\x1b[36m${time}\x1b[34m -- \x1b[1;33m[WARN]\x1b[0m ${message}`);
+        write(`${time} -- [WARN] ${message}${EOL}`);
     },
-    print: (...message) => {
-        console.log(`\x1b[0m\x1b[36m${getCurrentTime()}\x1b[34m -- \x1b[32m[INFO]\x1b[0m ${message}`);
-        write(`${getCurrentTime()} -- [INFO] ${message}\n`);
+    print: (message) => {
+        const time = getCurrentTime();
+        old_log(`\x1b[0m\x1b[36m${time}\x1b[34m -- \x1b[32m[INFO]\x1b[0m ${checkError(message) ? message.stack : message}`);
+        write(`${time} -- [INFO] ${checkError(message) ? message.message : message}${EOL}`);
     },
-    error: (...message) => {
-        console.log(`\x1b[0m\x1b[36m${getCurrentTime()}\x1b[34m -- \x1b[1;31m[ERROR]\x1b[0m ${message}`);
-        write(`${getCurrentTime()} -- [ERROR] ${message}\n`);
+    error: (err) => {
+        const time = getCurrentTime();
+        old_log(`\x1b[0m\x1b[36m${time}\x1b[34m -- \x1b[1;31m[ERROR]\x1b[0m ${
+            checkError(err) ? err.stack : err
+        }`);
+        write(`${time} -- [ERROR] ${
+            checkError(err) ? err.stack : err
+        }${EOL}`);
     },
 };
+
+write(`--${EOL}`);
+
+process.on('uncaughtException', (err, origin) => {
+    custom.error(err);
+});
+
+process.on('uncaughtRejection', (err, origin) => {
+    custom.error(err);
+});
+
+console.log = custom.print;
+console.warn = custom.warn;
+console.error = custom.error;
+
+module.exports = custom;
