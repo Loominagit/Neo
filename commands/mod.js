@@ -2,13 +2,9 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, Permissions } = require('discord.js');
 const { colorCodeError, colorCodeSuccess } = require('../config.json');
 
-const getUser = async (client, id) => {
-    return await client.users.fetch(id, { cache: false });
-};
-
-const checkPerms = (member, perms) => {
-    return member.permissions.has(perms) || member.permissions.has(Permissions.FLAGS.ADMINISTRATOR);
-};
+const getUser = async (client, id) => await client.users.fetch(id, { cache: false });
+const checkPerms = (member, perms) => member.permissions.has(perms) || member.permissions.has(Permissions.FLAGS.ADMINISTRATOR);
+const compareHighestRole = (member1, member2) => member1.roles.highest.position >= member2.roles.highest.position;
 
 const subCommands = {
     'kick': (interaction) => {
@@ -24,14 +20,21 @@ const subCommands = {
             embed
                 .setDescription('I\'m sorry, but you lack of permissions to do that.')
                 .setColor(colorCodeError);
-            return interaction.reply({ embeds: [embed] });
+            return interaction.reply({ embeds: [embed], ephermal: true });
         }
 
         if (!member.kickable) {
             embed
                 .setDescription(`I'm sorry, but I can't kick <@${member.user.id}>.`)
                 .setColor(colorCodeError);
-            return interaction.reply({ embeds: [embed] });
+            return interaction.reply({ embeds: [embed], ephermal: true });
+        }
+
+        if (compareHighestRole(member, author)) {
+            embed
+                .setDescription('You can\' kick this dude as their highest role is same or higher than yours.')
+                .setColor(colorCodeError);
+            return interaction.reply({ embeds: [embed], ephermal: true });
         }
 
         member.kick(reason).then(() => {
@@ -59,15 +62,23 @@ const subCommands = {
             embed
                 .setDescription('I\'m sorry, but you lack of permissions to do that.')
                 .setColor(colorCodeError);
-            return interaction.reply({ embeds: [embed] });
+            return interaction.reply({ embeds: [embed], ephermal: true });
         }
 
         if (!member.bannable) {
             embed
                 .setDescription(`I'm sorry, but I can't ban <@${member.user.id}>.`)
                 .setColor(colorCodeError);
-            return interaction.reply({ embeds: [embed] });
+            return interaction.reply({ embeds: [embed], ephermal: true });
         }
+
+        if (compareHighestRole(member, author)) {
+            embed
+                .setDescription('You can\' kick this dude as their highest role is same or higher than yours.')
+                .setColor(colorCodeError);
+            return interaction.reply({ embeds: [embed], ephermal: true });
+        }
+
         member.ban(banOption).then(() => {
             embed
                 .setDescription(`Ban @${member.user.tag}.`)
@@ -106,7 +117,7 @@ const subCommands = {
                 embed
                     .setDescription(`Unbanned @${user.tag}`)
                     .setColor(colorCodeSuccess);
-                return interaction.reply({ embeds: [embed], ephermal: true });
+                return interaction.reply({ embeds: [embed] });
             })
             .catch(() => {
                 embed
